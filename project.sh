@@ -9,6 +9,7 @@ case ${cmd} in
         sh -c 'cd libs && make'
         sh -c 'cd test && make'
         sh -c 'cd cmds && make'
+        sh -c 'cd basic_service && make'
         ;;  
     clean)
         sh -c 'cd driver/binder && make clean'
@@ -17,6 +18,7 @@ case ${cmd} in
         sh -c 'cd libs && make clean'
         sh -c 'cd test && make clean'
         sh -c 'cd cmds && make clean'
+        sh -c 'cd basic_service && make clean'
         ;; 
     insmod)
         sh -c 'sudo insmod driver/binder/binder_linux.ko'
@@ -26,8 +28,11 @@ case ${cmd} in
         sh -c 'sudo rmmod binder_linux'
         sh -c 'sudo rmmod ashmem_linux'
         ;; 
+    sm)
+        sh -c 'sudo servicemanager/servicemanager &'
+        ;;
    *)  
-      echo "`basename ${0}`:usage: [makeall] | [clean] | [insmod] | [rmmod]" 
+      echo "`basename ${0}`:usage: [makeall] | [clean] | [insmod] | [rmmod] | [sm]" 
       exit 1
       ;; 
 esac
