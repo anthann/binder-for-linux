@@ -6,14 +6,14 @@
 class MyProtoService: public BnProtoService {
 	public:
 		virtual ~MyProtoService() {}
-        proto_service::Empty setText(proto_service::Data input) {
-            text = input.text();
+        int setText(const proto_service::Data& req, proto_service::Empty* resp) {
+            text = req.text();
+            return 1;
 		}
 
-        proto_service::Data getText(proto_service::Empty) {
-            proto_service::Data data;
-            data.set_text(text);
-            return data;
+        int getText(const proto_service::Empty& req, proto_service::Data* resp) {
+            resp->set_text(text);
+            return 1;
 		}
 
     private:

@@ -17,8 +17,8 @@ using namespace android;
 class IProtoService: public IInterface {
 	public:
 		DECLARE_META_INTERFACE(ProtoService);
-		virtual proto_service::Empty setText(proto_service::Data) = 0;
-		virtual proto_service::Data getText(proto_service::Empty) = 0;
+		virtual int setText(const proto_service::Data& req, proto_service::Empty* resp) = 0;
+		virtual int getText(const proto_service::Empty& req, proto_service::Data* resp) = 0;
 };
 
 class BnProtoService: public BnInterface<IProtoService> {

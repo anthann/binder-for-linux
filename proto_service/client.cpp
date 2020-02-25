@@ -2,16 +2,20 @@
 #include "IProtoService.h"
 
 void get(const sp<IProtoService>& service) {
-    proto_service::Empty getParam;
-    proto_service::Data getRecv = service->getText(getParam);
-	std::cout<< "client:get: " << getRecv.text() << std::endl;
+    proto_service::Empty req;
+    proto_service::Data resp;
+    int ret = service->getText(req, &resp);
+	std::cout<< "client:get: " << resp.text() << std::endl;
+    std::cout << "return: " << ret << std::endl;
 }
 
 void set(const sp<IProtoService>& service, std::string content) {
-    proto_service::Data send;
-    send.set_text(content);
-    proto_service::Empty setRecv = service->setText(send);
+    proto_service::Data req;
+    req.set_text(content);
+    proto_service::Empty resp;
+    int ret = service->setText(req, &resp);
     std::cout << "client:set: " << content << std::endl;
+    std::cout << "return: " << ret << std::endl;
 }
 
 int main(int argc, char* argv[]) {
