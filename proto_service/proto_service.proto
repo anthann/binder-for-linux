@@ -1,0 +1,17 @@
+syntax = "proto3";
+
+package proto_service;
+
+message Empty {
+}
+
+message Data {
+    string text = 1;
+}
+
+service ProtoService {
+    rpc setText (Data) returns (Empty) {
+    }
+    rpc getText (Empty) returns (Data) {
+    }
+}

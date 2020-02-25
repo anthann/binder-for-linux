@@ -10,6 +10,7 @@ case ${cmd} in
         sh -c 'cd test && make'
         sh -c 'cd cmds && make'
         sh -c 'cd basic_service && make'
+        sh -c 'cd proto_service && make'
         ;;  
     clean)
         sh -c 'cd driver/binder && make clean'
@@ -19,6 +20,7 @@ case ${cmd} in
         sh -c 'cd test && make clean'
         sh -c 'cd cmds && make clean'
         sh -c 'cd basic_service && make clean'
+        sh -c 'cd proto_service && make clean'
         ;; 
     insmod)
         sh -c 'sudo insmod driver/binder/binder_linux.ko'
