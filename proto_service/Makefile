@@ -1,13 +1,13 @@
 all: server client
 
 IProtoService.o: IProtoService.cpp 
-	g++ -std=c++11 -c $< -I../libs/include -I.. -L../libs -DHAVE_PTHREADS -DHAVE_SYS_UIO_H -DHAVE_ENDIAN_H -DHAVE_ANDROID_OS=1  -lbinder -lpthread
+	g++ -std=c++11 -c $< -I../libs/include -I.. 
 
 server.o: server.cpp
-	g++ -std=c++11 -c $< -I../libs/include -I.. -L../libs -DHAVE_PTHREADS -DHAVE_SYS_UIO_H -DHAVE_ENDIAN_H -DHAVE_ANDROID_OS=1  -lbinder -lpthread
+	g++ -std=c++11 -c $< -I../libs/include -I..
 	
 client.o: client.cpp
-	g++ -std=c++11 -c $< -I../libs/include -I.. -L../libs -DHAVE_PTHREADS -DHAVE_SYS_UIO_H -DHAVE_ENDIAN_H -DHAVE_ANDROID_OS=1  -lbinder -lpthread
+	g++ -std=c++11 -c $< -I../libs/include -I..
 
 proto_service.pb.o: proto_service.pb.cpp
 	g++ -std=c++11 -c $< 
