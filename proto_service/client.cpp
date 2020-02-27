@@ -18,10 +18,17 @@ void set(const sp<IProtoService>& service, std::string content) {
     std::cout << "return: " << ret << std::endl;
 }
 
+void crash(const sp<IProtoService>& service) { 
+    service->crash();
+}
+
 int main(int argc, char* argv[]) {
-	sp<IServiceManager> sm = defaultServiceManager();
-	sp<IBinder> binder = sm->getService(String16("service.proto"));
-	sp<IProtoService> service = interface_cast<IProtoService>(binder);
+    sp<IProtoService> service;
+    int status = getService(String16("service.proto"), &service);
+    if (status != 0) {
+        std::cout << "Client can't get service" << std::endl; 
+        return 0; 
+    }
     if (argc == 1) {
         set(service, "default message");
         get(service);
@@ -36,6 +43,8 @@ int main(int argc, char* argv[]) {
             } else {
                 set(service, "default message");
             } 
+        } else if (command == "crash") {
+            crash(service);
         } else {
             std::cout << "Usage: sudo ./client (get | set [message])"  << std::endl;
         }

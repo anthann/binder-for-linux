@@ -1,16 +1,17 @@
 #include <string>
+#include <cstdio>
 #include "IProtoService.h"
 
 enum {
 	SETTEXT = IBinder::FIRST_CALL_TRANSACTION,
 	GETTEXT = IBinder::FIRST_CALL_TRANSACTION + 1,
+	ABORT = IBinder::FIRST_CALL_TRANSACTION + 2,
 };
 
 class BpProtoService: public BpInterface<IProtoService> {
 	public:
 		BpProtoService(const sp<IBinder>& impl): BpInterface<IProtoService>(impl) {}
         int setText(const proto_service::Data& req, proto_service::Empty* resp) {
-			printf("BpProtoService::setText\n");
 			Parcel data, reply;
 			data.writeInterfaceToken(IProtoService::getInterfaceDescriptor());
             size_t size = req.ByteSizeLong();
@@ -34,7 +35,6 @@ class BpProtoService: public BpInterface<IProtoService> {
 		}
 
         int getText(const proto_service::Empty& req, proto_service::Data* resp) {
-			printf("BpProtoService::getText\n");
 			Parcel data, reply;
 			data.writeInterfaceToken(IProtoService::getInterfaceDescriptor());
             size_t size = req.ByteSizeLong();
@@ -55,12 +55,17 @@ class BpProtoService: public BpInterface<IProtoService> {
             }
             return 0;
 		}
+
+        void crash() {
+			Parcel data, reply;
+			data.writeInterfaceToken(IProtoService::getInterfaceDescriptor());
+            remote()->transact(ABORT, data, &reply);
+        }
 };
 
 IMPLEMENT_META_INTERFACE(ProtoService, "me.anthann.protoservice");
 
 status_t BnProtoService::onTransact(uint32_t code, const Parcel& data, Parcel* reply, uint32_t flags) {
-    printf("BnProtoService::onTransace");
 	switch(code) {
 	case SETTEXT: {
 		CHECK_INTERFACE(IProtoService, data, reply);
@@ -106,6 +111,10 @@ status_t BnProtoService::onTransact(uint32_t code, const Parcel& data, Parcel* r
         }
 		break;
 	}
+    case ABORT: {
+		CHECK_INTERFACE(IProtoService, data, reply);
+        crash();       
+    }
 	default:
 		break;
 	}

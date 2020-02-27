@@ -1,7 +1,5 @@
 #ifndef BASIC_SERVICE
 #define BASIC_SERVICE
-#include <stdio.h>
-#include <utils/RefBase.h>
 #include <binder/IInterface.h>
 #include <binder/Parcel.h>
 #include <binder/IBinder.h>
@@ -19,6 +17,7 @@ class IProtoService: public IInterface {
 		DECLARE_META_INTERFACE(ProtoService);
 		virtual int setText(const proto_service::Data& req, proto_service::Empty* resp) = 0;
 		virtual int getText(const proto_service::Empty& req, proto_service::Data* resp) = 0;
+        virtual void crash() = 0;
 };
 
 class BnProtoService: public BnInterface<IProtoService> {
