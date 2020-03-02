@@ -12,6 +12,9 @@ ITestInterface.o: ITestInterface.cpp
 TestInterfaceImpl.o: TestInterfaceImpl.cpp
 	g++ -std=c++11 -c $< -I../libs/include -I..
 
+TestCallback.o: TestCallback.cpp
+	g++ -std=c++11 -c $< -I../libs/include -I..
+
 server.o: server.cpp
 	g++ -std=c++11 -c $< -I../libs/include -I..
 
@@ -21,7 +24,7 @@ client.o: client.cpp
 server: ICallbackInterface.o ITestInterface.o TestInterfaceImpl.o server.o
 	g++ -std=c++11 -o $@ $^  -I../libs/include -I.. -L../libs -DHAVE_PTHREADS -DHAVE_SYS_UIO_H -DHAVE_ENDIAN_H -DHAVE_ANDROID_OS=1  -lbinder -lpthread
 
-client: ICallbackInterface.o ITestInterface.o CallbackInterfaceImpl.o client.o
+client: ICallbackInterface.o ITestInterface.o CallbackInterfaceImpl.o TestCallback.o client.o
 	g++ -std=c++11 -o $@ $^  -I../libs/include -I.. -L../libs -DHAVE_PTHREADS -DHAVE_SYS_UIO_H -DHAVE_ENDIAN_H -DHAVE_ANDROID_OS=1  -lbinder -lpthread
 
 clean:

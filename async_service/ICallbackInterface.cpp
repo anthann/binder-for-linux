@@ -1,3 +1,4 @@
+#include <iostream>
 #include "ICallbackInterface.h"
 
 using namespace android;
@@ -5,6 +6,7 @@ using namespace android;
 enum
 {
     CALLBACK01 = IBinder::FIRST_CALL_TRANSACTION,
+    SAYHELLO
 };
 
 class BpCallbackInterface : public BpInterface<ICallbackInterface>
@@ -23,6 +25,14 @@ public:
         data.writeInt32(ext2);
         remote()->transact(CALLBACK01, data, &reply);
     }
+
+    virtual void sayHello_cb(String8 msg) {
+        std::cout << "BpCallbackInterface::sayHello_cb" << std:: endl;
+        Parcel data;
+        data.writeInterfaceToken(ICallbackInterface::getInterfaceDescriptor());
+        data.writeString8(msg);
+        remote()->transact(SAYHELLO, data, NULL, IBinder::FLAG_ONEWAY);
+    }
 };
 
 IMPLEMENT_META_INTERFACE(CallbackInterface, "me.anthann.CallbackInterface");
@@ -39,6 +49,14 @@ status_t BnCallbackInterface::onTransact(uint32_t code, const Parcel &data, Parc
         int32_t ext2 = data.readInt32();
         notifyCallback01(msgType, ext1, ext2);
         break;
+    }
+    case SAYHELLO:
+    {
+        CHECK_INTERFACE(ICallbackInterface, data, reply);
+        std::cout << "BnCallbackInterface::sayHello_cb" << std:: endl;
+        String8 msg = data.readString8();
+        sayHello_cb(msg);
+        break; 
     }
     default:
         break;

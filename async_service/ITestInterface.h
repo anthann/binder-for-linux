@@ -18,6 +18,7 @@ public:
     virtual int InitParam(const android::sp<ICallbackInterface> &callback) = 0; //init parameter
     virtual int Add(int a, int b) = 0;                                        //return a+b
     virtual int CallbackTest() = 0;                                           //force callback
+    virtual void sayHello(android::String8 msg, const android::sp<ICallbackInterface>& callback) = 0;
 };
 
 class BnTestInterface : public android::BnInterface<ITestInterface>

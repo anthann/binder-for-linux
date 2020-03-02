@@ -14,6 +14,7 @@ class ICallbackInterface: public android::IInterface
 public:
     DECLARE_META_INTERFACE(CallbackInterface);
     virtual void notifyCallback01(int32_t msgType, int32_t ext1, int32_t ext2) = 0; //call from service
+    virtual void sayHello_cb(android::String8 msg) = 0;
 };
 
 class BnCallbackInterface: public android::BnInterface<ICallbackInterface> {

@@ -6,7 +6,8 @@ enum
 {
     SETCALLBACK = android::IBinder::FIRST_CALL_TRANSACTION,
     ADD,
-    CALLBACKTEST
+    CALLBACKTEST,
+    SAYHELLO
 };
 
 class BpTestInterface : public BpInterface<ITestInterface>
@@ -36,12 +37,25 @@ public:
         remote()->transact(ADD, data, &reply);
         return (reply.readInt32());
     }
+
     virtual int CallbackTest() //force callback
     {
         Parcel data, reply;
         data.writeInterfaceToken(ITestInterface::getInterfaceDescriptor());
-        remote()->transact(CALLBACKTEST, data, &reply);
+        remote()->transact(CALLBACKTEST, data, &reply, IBinder::FLAG_ONEWAY);
         return (reply.readInt32());
+    }
+
+    virtual void sayHello(String8 msg, const sp<ICallbackInterface>& callback) {
+        Parcel data, reply;
+        data.writeInterfaceToken(ITestInterface::getInterfaceDescriptor());
+        //auto s = callback.promote();
+        //if (s == NULL) {
+        //    return; 
+        //}
+        data.writeStrongBinder(IInterface::asBinder(callback));
+        data.writeString8(msg);
+        remote()->transact(SAYHELLO, data, &reply, IBinder::FLAG_ONEWAY);
     }
 };
 
@@ -71,6 +85,14 @@ status_t BnTestInterface::onTransact(
     {
         CHECK_INTERFACE(ITestInterface, data, reply);
         reply->writeInt32(CallbackTest());
+        break;
+    }
+    case SAYHELLO:
+    {
+        CHECK_INTERFACE(ITestInterface, data, reply);
+        sp<ICallbackInterface> callback = interface_cast<ICallbackInterface>(data.readStrongBinder());
+        String8 a = data.readString8();
+        sayHello(a, callback);
         break;
     }
     default:

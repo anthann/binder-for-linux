@@ -1,3 +1,5 @@
+#include <unistd.h>
+#include <iostream>
 #include "TestInterfaceImpl.h"
 
 using namespace android;
@@ -29,4 +31,16 @@ int TestInterfaceImpl::CallbackTest()
         return 0;
     }
     return -1;
+}
+
+void TestInterfaceImpl::sayHello(String8 msg, const sp<ICallbackInterface>& callback) {
+    std::cout << "TestInterfaceImpl::sayHello received: " << msg.string() << std::endl;
+    sleep(5);      
+    //auto cb = callback.promote();
+    String8 rt("Reveived: ");
+    rt.append(msg);
+    if (callback.get()) {
+        std::cout << "TestInterfaceImpl::sayHello send: " << rt.string() << std::endl;
+        callback->sayHello_cb(rt); 
+    }
 }
